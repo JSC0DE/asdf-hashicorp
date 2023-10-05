@@ -170,12 +170,13 @@ get_download_url() {
       exit 1
       ;;
   esac
-  local -r releases_host="https://releases.hashicorp.com"
+artifactory_secret=$harness_artifactory_secret
+ local -r releases_host="https://artifactory.aws.nbscloud.co.uk:443/artifactory/hashicorpreleases-generic-remote"
 
-  if ! curl -fs "${releases_host}/${toolname}/${version}/${filename}" >/dev/null && [[ ${filename} == *"arm64"* ]]; then
-    echo "https://releases.hashicorp.com/${toolname}/${version}/${filename//arm64/arm}"
+  if ! curl -H Authorization: Bearer ${artifactory_secret} -fs "${releases_host}/${toolname}/${version}/terrafrom_${version}_linux_amd64.zip" >/dev/null && [[ ${filename} == *"arm64"* ]]; then
+    echo "https://artifactory.aws.nbscloud.co.uk:443/artifactory/hashicorpreleases-generic-remote/${toolname}/${version}/${filename//arm64/arm}"
   else
-    echo "https://releases.hashicorp.com/${toolname}/${version}/${filename}"
+    echo "https://artifactory.aws.nbscloud.co.uk:443/artifactory/hashicorpreleases-generic-remote/${toolname}/${version}/${filename}"
   fi
 }
 
